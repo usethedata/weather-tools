@@ -3,6 +3,9 @@ Project-specific to-do items for weather-tools (GitHub: usethedata/weather-tools
 
 ## Items
 
+- [ ] Rename `check-weather-collect` to something more meaningful.
+    The current name is generic. A name along the lines of `get-weather-forecasts-actuals` describes what the script actually does (retrieves the forecast and yesterday's actuals from NWS and writes them to the archive). Any rename must also update the systemd service unit in chezmoi (`dot_config/systemd/user/weather-collect.service`: `ExecStart`), the `$LOG_DIR` filename pattern in the wrapper, any `~/bin` symlinks created by `install.sh`, and references in `README.md`, `CLAUDE.md`, and `TODO.md`. Consider renaming `check-weather-alerts` at the same time for consistency.
+
 - [ ] Harden NWS forecast fetch against transient timeouts.
     `src/weather/forecast.py` makes two sequential NWS API calls (`/points/{lat,lon}` then the `forecast` URL), both with a hard 10-second timeout and no retry logic. Either call timing out kills the whole forecast. Observed to fail at 05:00 EDT on 2026-04-21 (superbear's final launchd run) and 2026-04-22 (grizzledbear's first systemd run); a manual rerun at 09:09 on 2026-04-22 succeeded, so the endpoint is reachable but slow/flaky at 05:00. Fix: add retries with exponential backoff and a longer connect/read timeout; consider caching the points→gridpoint URL mapping so successful first calls don't have to repeat on retry. Actuals collection has no such issue.
 
