@@ -17,3 +17,4 @@ Project-specific to-do items for weather-tools (GitHub: usethedata/weather-tools
 
 - [ ] Reconsider whether SMTP credentials belong in Dropbox-synced `config.yaml`.
     `config.yaml` is gitignored but Dropbox-synced, so the Fastmail SMTP password ends up on every host that syncs BEWMain (including synologies). Current threat model accepts this for convenience. Alternatives: split secrets into a non-Dropbox file (`~/.config/weather-tools/secrets.yaml` or env vars), or accept the status quo and document the decision. Decide when the broader "machine-specific files out of Dropbox" refactor runs across projects.
+
